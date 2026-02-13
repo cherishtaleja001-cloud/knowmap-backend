@@ -2,15 +2,24 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from urllib.parse import quote_plus
 
-password = quote_plus("Mukesh@123")
+# 🔐 Put your actual MySQL password inside the quotes
+raw_password = "Mukesh@123"
+
+# Encode special characters safely
+password = quote_plus(raw_password)
 
 DATABASE_URL = f"mysql+pymysql://root:{password}@localhost/knowmap_db"
 
 engine = create_engine(DATABASE_URL)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
 
 Base = declarative_base()
+
 
 def get_db():
     db = SessionLocal()
@@ -18,3 +27,4 @@ def get_db():
         yield db
     finally:
         db.close()
+
